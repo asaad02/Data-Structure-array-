@@ -5,6 +5,12 @@
  * @brief File containing the function definitions that operate like arrays
  **/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "array.h"
+#include <string.h>
+
+
 /* this function allocate memory for the performance struct and return the address of the the structure */
 struct Performance *newPerformance(){
     // allocate memory for a performance struct 
@@ -66,17 +72,17 @@ struct Array *newArray(struct Performance *performance, unsigned int width, unsi
 /* This function read the item and copy it to the des void dest*/
 void readItem( struct Performance *performance, struct Array *array, unsigned int index, void *dest ){
 
-    // if idex greater or equal nel should print error message and exit 
-    if (index >= array -> nel)
+    // if index greater or equal nel should print error message and exit 
+    if (index >= array->nel)
     {
-        fprintf(stderr,"%s","index is greater or equal to the number of elements of the array \n");
+        fprintf(stderr,"%s","index is greater or equal to the number of elements of the array in read item operation \n");
         exit(0);
     }
     else
     {
         //copy width bytes from memory address data  to dest
-        int offsit = index * array -> width ;
-        memcpy( dest, array -> data + offsit, array -> width );
+        //int offsit = index * array-> width ;
+        memcpy( dest, array-> data +(index * array-> width), array -> width );
         
 
         // increment read at performance struct 
@@ -90,16 +96,16 @@ void readItem( struct Performance *performance, struct Array *array, unsigned in
 /* this function will write the from the src to the array data */
 void writeItem( struct Performance *performance, struct Array *array, unsigned int index, void *src){
     // if index exceed or equal nel or capacity 
-    if (index >= array -> nel || index >= array -> capacity)
+    if (index > array -> nel || index == array -> capacity)
     {
-         fprintf(stderr,"%s","index is greater or equal to the number of elements of the array \n");
+         fprintf(stderr,"%s","index is greater or equal to the number of elements of the array  in write item operation\n");
         exit(0);
     }
     else
     {
         //copy width byts from src into array data
-        int offsit = index * array -> width ;
-        memcpy( array -> data, src + offsit, array -> width );
+        //int offsit = index * array -> width ;
+        memcpy( array -> data, src + (index * array-> width) , array -> width );
 
         // if index equals nel incremented by one 
         if (index == array -> nel)
