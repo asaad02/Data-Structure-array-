@@ -161,13 +161,13 @@ void appendItem( struct Performance *performance, struct Array *array, void *src
 void insertItem(struct Performance *performance, struct Array *array, unsigned int index, void *src){
     
     /* for loop for move elements to higher position */
-    for (int i = array->nel -1  ; i > index -1 ; i--)
+    for (int i = array->nel - 1  ; i >index ; i--)
     {
 
     void* wordBefore = malloc(sizeof(array->width)) ;
 
     /* read function */
-    readItem( performance , array, i  , &wordBefore);
+    readItem( performance , array, i   , &wordBefore);
         
 
     /* write function */
@@ -175,7 +175,39 @@ void insertItem(struct Performance *performance, struct Array *array, unsigned i
 
     }
 
-
-    writeItem( performance, array, index , src );
+    /* write function */
+    writeItem( performance, array, index   , src );
 
 }
+
+/* This function to insert data at position 0 */
+void prependItem(struct Performance *performance, struct Array *array, void *src){
+    insertItem( performance, array, 0 ,src );
+}
+
+
+/* this function will delete an item in the array  */
+void deleteItem(struct Performance *performance, struct Array *array, unsigned int index){
+
+    void* wordBefore = malloc(sizeof(array->width)) ;
+    
+    for (int i = index - 1 ; i < array->nel   ; i++)
+    {
+
+    
+    readItem( performance , array, i   , &wordBefore);
+        
+
+    
+    writeItem( performance, array, i - 1 , &wordBefore );
+
+    }
+
+   
+    contract(performance,array);
+
+
+ } 
+
+
+

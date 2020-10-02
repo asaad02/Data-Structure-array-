@@ -39,3 +39,21 @@ void contract(struct Performance *performance, struct Array *array);
 
 /* This function  will free array data and array structer*/
 void freeArray( struct Performance *performance, struct Array *array );
+
+/* Derived functions */
+
+/* add elemnts to the end of the array */
+void appendItem( struct Performance *performance, struct Array *array, void *src);
+
+/* This function  will moves all the elements in the array by higher position giving by index */
+void insertItem(struct Performance *performance, struct Array *array, unsigned int index, void *src);
+
+/* this function will insert item at postion 0 */
+void prependItem(struct Performance *performance, struct Array *array, void *src);
+
+/* This function to insert data at position 0 */
+void prependItem(struct Performance *performance, struct Array *array, void *src);
+
+/* this function will delete an item in the array */
+void deleteItem(struct Performance *performance, struct Array *array, unsigned int index);
+
