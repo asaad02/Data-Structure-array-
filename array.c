@@ -11,7 +11,6 @@
 #include <string.h>
 
 
-/* this function allocate memory for the performance struct and return the address of the the structure */
 struct Performance *newPerformance(){
     // allocate memory for a performance struct 
 
@@ -43,7 +42,7 @@ struct Array *newArray(struct Performance *performance, unsigned int width, unsi
     //print an error message to the standard error stream and exit if the malloc function fails.
     if(newArray == NULL){
         fprintf(stderr,"%s","Memory allocation for struct has failed\n");
-        exit(1);
+        exit(0);
     }
 
     //set Width and capicity to the value provide by function Agreement.
@@ -51,7 +50,7 @@ struct Array *newArray(struct Performance *performance, unsigned int width, unsi
     newArray -> capacity = capacity;
 
     // set nel to zero 
-    newArray -> nel = 0 ;
+    newArray -> nel = 0;
 
     // allocate width and capacity memory string into the address of data. 
     newArray -> data = malloc(width * capacity );
@@ -82,7 +81,7 @@ void readItem( struct Performance *performance, struct Array *array, unsigned in
     {
         //copy width bytes from memory address data  to dest
         //int offsit = index * array-> width ;
-        memcpy( dest, array-> data +(index * array-> width), array -> width );
+        memcpy( dest, (char*)array-> data +(index * array-> width), array -> width );
         
 
         // increment read at performance struct 
@@ -95,8 +94,10 @@ void readItem( struct Performance *performance, struct Array *array, unsigned in
 
 /* this function will write the from the src to the array data */
 void writeItem( struct Performance *performance, struct Array *array, unsigned int index, void *src){
-    // if index exceed or equal nel or capacity 
-    if (index > array -> nel || index == array -> capacity)
+    
+    
+    
+    if (index > array-> nel || index >= array -> capacity)
     {
          fprintf(stderr,"%s","index is greater or equal to the number of elements of the array  in write item operation\n");
         exit(0);
@@ -105,13 +106,15 @@ void writeItem( struct Performance *performance, struct Array *array, unsigned i
     {
         //copy width byts from src into array data
         //int offsit = index * array -> width ;
-        memcpy( array -> data, src + (index * array-> width) , array -> width );
+        memcpy( (char*) array -> data+( index * array-> width ), src  , array -> width );
 
         // if index equals nel incremented by one 
+        // if index exceed or equal nel or capacity 
         if (index == array -> nel)
         {
-            array -> nel++;
+            array->nel++;
         }
+
         // add one to the writes in performance 
          performance -> writes++;
         
@@ -148,3 +151,31 @@ void freeArray( struct Performance *performance, struct Array *array ){
     performance -> frees ++;
 }
 
+/* add elemnts to the end of the array */
+void appendItem( struct Performance *performance, struct Array *array, void *src){
+    /* calling write item */
+    writeItem( performance, array, array->nel,src );
+}
+
+/* This function  will moves all the elements in the array by higher position giving by index */
+void insertItem(struct Performance *performance, struct Array *array, unsigned int index, void *src){
+    
+    /* for loop for move elements to higher position */
+    for (int i = array->nel -1  ; i > index -1 ; i--)
+    {
+
+    void* wordBefore = malloc(sizeof(array->width)) ;
+
+    /* read function */
+    readItem( performance , array, i  , &wordBefore);
+        
+
+    /* write function */
+    writeItem( performance, array, i + 1, &wordBefore );
+
+    }
+
+
+    writeItem( performance, array, index , src );
+
+}
