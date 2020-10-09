@@ -239,5 +239,62 @@ int findItem ( struct Performance * performance, struct Array * array, int(*comp
     free(word1);
     return -1;
  }
-    
+
+    /* this function search for element and retrieve it */
+    int searchItem ( struct Performance * performance, struct Array * array, int(*compar)(const void *, const void *), void * target){
+
+        /* lower bownd */
+        int low =0 ;
+        /* Upper Bownd */
+         int high = array-> nel - 1;
+
+        /* middle bownd */
+        
+         int mid =0;
+
+        int *sur = malloc(array->width);
+        /* do loop */
+        do
+        {
+            int mid =(high + low)/2;
+
+            /* read item in the mid*/
+            
+            readItem(performance,array,mid,sur);
+
+            /* apply compar function to the target and the retrived elemnts */
+
+            /* if compar function return zero that indicating a match )*/
+            if (compar(sur,target) == 0 )
+            {
+                free(sur);
+                return mid ;
+            } 
+            /*if compar function return less than zero that indicating precdes the target */
+            else if (compar(sur,target) < 0)
+            {
+                low = mid +  1;
+                mid =(high + low)/2;
+            }  
+            /*if compar function return grater than zero that indicating retrieved elements comes after the target  */
+            else if (compar(sur,target) > 0)
+            {
+                high = mid - 1;
+                mid =(high + low)/2;
+            }
+            
+        } while (high >= low);
+        
+
+        readItem(performance,array,mid,sur);
+
+        if (compar(sur,target) == 0 )
+        {
+            free(sur);
+            return mid;
+        }
+        /* when the function didnt find a match , it will return -1 */
+        return -1 ;
+    }
+   
 

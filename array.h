@@ -59,4 +59,5 @@ void deleteItem(struct Performance *performance, struct Array *array, unsigned i
 
 /* find item */
 int findItem ( struct Performance * performance, struct Array * array, int(*compar)(const void *, const void *), void * target);
-
+/* shearch function */
+int searchItem ( struct Performance * performance, struct Array * array, int(*compar)(const void *, const void *), void * target);
