@@ -70,7 +70,8 @@ struct Array *newArray(struct Performance *performance, unsigned int width, unsi
 
 /* This function read the item and copy it to the des void dest*/
 void readItem( struct Performance *performance, struct Array *array, unsigned int index, void *dest ){
-
+    
+    char * arryaddress = array->data;
     // if index greater or equal nel should print error message and exit 
     if (index >= array->nel)
     {
@@ -81,7 +82,7 @@ void readItem( struct Performance *performance, struct Array *array, unsigned in
     {
         //copy width bytes from memory address data  to dest
         //int offsit = index * array-> width ;
-        memcpy( dest, (char*)array-> data +(index * array-> width), array -> width );
+        memcpy( dest, &arryaddress[array->width * index], array -> width );
         
 
         // increment read at performance struct 
@@ -96,7 +97,8 @@ void readItem( struct Performance *performance, struct Array *array, unsigned in
 void writeItem( struct Performance *performance, struct Array *array, unsigned int index, void *src){
     
     
-    
+    char * arryaddress = array->data; 
+
     if (index > array-> nel || index >= array -> capacity)
     {
          fprintf(stderr,"%s","index is greater or equal to the number of elements of the array  in write item operation\n");
@@ -106,7 +108,7 @@ void writeItem( struct Performance *performance, struct Array *array, unsigned i
     {
         //copy width byts from src into array data
         //int offsit = index * array -> width ;
-        memcpy( (char*) array -> data+( index * array-> width ), src  , array -> width );
+        memcpy( &arryaddress[array->width * index], src  , array -> width );
 
         // if index equals nel incremented by one 
         // if index exceed or equal nel or capacity 
@@ -160,23 +162,27 @@ void appendItem( struct Performance *performance, struct Array *array, void *src
 /* This function  will moves all the elements in the array by higher position giving by index */
 void insertItem(struct Performance *performance, struct Array *array, unsigned int index, void *src){
     
-    /* for loop for move elements to higher position */
-    for (int i = array->nel - 1  ; i >index ; i--)
-    {
-
+    
     void* wordBefore = malloc(sizeof(array->width)) ;
 
-    /* read function */
-    readItem( performance , array, i   , &wordBefore);
+    int i =0 ;
+    /* for loop for move elements to higher position */
+    for (i = array->nel-1   ; i +1 > index  ; i--)
+    {
+
+     /* read function */
+        readItem( performance , array, i , wordBefore);
         
 
     /* write function */
-    writeItem( performance, array, i + 1, &wordBefore );
+        writeItem( performance, array, i + 1, wordBefore );
 
     }
 
     /* write function */
-    writeItem( performance, array, index   , src );
+    writeItem( performance, array, index , src );
+
+    free(wordBefore);
 
 }
 
@@ -189,25 +195,49 @@ void prependItem(struct Performance *performance, struct Array *array, void *src
 /* this function will delete an item in the array  */
 void deleteItem(struct Performance *performance, struct Array *array, unsigned int index){
 
-    void* wordBefore = malloc(sizeof(array->width)) ;
+    void* word = malloc(sizeof(array->width)) ;
+
+    int i =0 ;
     
-    for (int i = index - 1 ; i < array->nel   ; i++)
+    for (i = index + 1 ; i < array->nel   ; i++)
     {
 
     
-    readItem( performance , array, i   , &wordBefore);
+    readItem( performance , array, i , word);
         
 
     
-    writeItem( performance, array, i - 1 , &wordBefore );
+    writeItem( performance, array, i - 1 , word );
 
     }
 
    
     contract(performance,array);
 
+    free(word);
+
 
  } 
 
+int findItem ( struct Performance * performance, struct Array * array, int(*compar)(const void *, const void *), void * target){
+    void * word1 = malloc(array->width);
 
+    //loop
+
+    for (int i = 0; i < array->nel; i++)
+    {
+        readItem(performance,array,i,word1);
+
+        //target and lement = 0
+        if (compar(target,word1)==0)
+        {
+            // return i
+            return i;
+        }
+        
+    }
+    free(word1);
+    return -1;
+ }
+    
 

@@ -57,3 +57,6 @@ void prependItem(struct Performance *performance, struct Array *array, void *src
 /* this function will delete an item in the array */
 void deleteItem(struct Performance *performance, struct Array *array, unsigned int index);
 
+/* find item */
+int findItem ( struct Performance * performance, struct Array * array, int(*compar)(const void *, const void *), void * target);
+
