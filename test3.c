@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "array.h"
-#include<string.h>
 
 /* This program will fill an array of integers of size 100 with the first 
- * 20 digits of the Fibonacci series.  It will then print out the first 
- * 20 digits, and finally report the number of read, write, malloc and free 
- * calls.
+ * 20 digits of the Fibonacci series.
+ * It then tries to retrieve an item at position 20, which should generate 
+ * an error.
  */
 
 #define	CAPACITY	100	// total capacity of the array
@@ -29,11 +28,7 @@ int main( int argc, char **argv )
     data1 = tmp;
   }
 
-  for (i=0;i<NEL;i++)
-  {
-    readItem( perf, array, i, &data1 );
-    printf( "%d %d\n", i, data1 );
-  }
+  readItem( perf, array, 20, &data1 );
 
   freeArray( perf, array );
 
